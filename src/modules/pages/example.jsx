@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styles from '../../css/example.module.css';
 import bacground from '../../storage/img/background.png';
 import air from '../../storage/img/air.png';
@@ -8,6 +8,26 @@ import rain from '../../storage/img/rainy.png';
 import hour from '../../storage/img/history_toggle_off.png';
 import calendar from '../../storage/img/calendar_month.png';
 import { getCurrentWeather, getWeatherForecast } from '../../../server/weatherService.js';
+
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+
+function MyChart({ data }) {
+  const dias = ['Mon', 'Tues', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']
+  const forecastData = data.forecastday.map(day => ({
+    date: dias,
+    temperatureDiff: day.day.avgtemp_c,
+  }));
+
+  return (
+    <BarChart width={340} height={250} data={forecastData}>
+      <XAxis dataKey="date" />
+      <YAxis label="" />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="temperatureDiff" fill="#8884d8" />
+    </BarChart>
+  );
+}
 
 export default function Example() {
   const [weather, setWeather] = useState(null);
@@ -134,12 +154,21 @@ export default function Example() {
         </div>
       </div>
       <div className={styles.forecastDay}>
-      <div className={styles.title}>
-          <div className={styles.boxImg}>
-            <img src={calendar} alt="" />
+        <div className={styles.title}>
+            <div className={styles.boxImg}>
+              <img src={calendar} alt="" />
+            </div>
+            <h3>Day forecast</h3>
           </div>
-          <h3>Day forecast</h3>
-        </div>
+          <MyChart data={forecast}></MyChart>
+      </div>
+      <div className={styles.chanceOfRain}>
+        <div className={styles.title}>
+            <div className={styles.boxImg}>
+              <img src={calendar} alt="" />
+            </div>
+            <h3>Chance of rain</h3>
+          </div>
       </div>
     </div>
   );
