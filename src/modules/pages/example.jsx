@@ -7,9 +7,41 @@ import sol from '../../storage/img/light_mode.png';
 import rain from '../../storage/img/rainy.png';
 import hour from '../../storage/img/history_toggle_off.png';
 import calendar from '../../storage/img/calendar_month.png';
+import sunset from '../../storage/img/bounding_box.png';
+import sunrise from '../../storage/img/nights_stay.png';
 import { getCurrentWeather, getWeatherForecast } from '../../../server/weatherService.js';
+import { BarChart, Bar, XAxis, YAxis, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+const RainChart = ({ apiData }) => {
+  const rainData = apiData.forecastday[0].hour.map((hour) => ({
+    time: new Date(hour.time).toLocaleTimeString([], { hour: '2-digit', hour12: true }),
+    chanceOfRain: hour.chance_of_rain,
+  }));
+
+  return (
+    <div style={{ backgroundColor: '#f5f5ff', padding: '1rem', borderRadius: '10px' }}>
+      <ResponsiveContainer width="90%" height={800}>
+      <BarChart
+          data={rainData}
+          layout="vertical"  
+          barCategoryGap="15%"
+        >
+          <XAxis type="number" domain={[0, 100]} hide />
+          <YAxis type="category" dataKey="time" width={80} />
+          <Tooltip formatter={(value) => `${value}%`} />
+          <Bar
+            dataKey="chanceOfRain"
+            fill="#8A20D5"
+            radius={[10, 10, 0, 0]}
+            background={{ fill: '#e0dff9' }}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+
 
 function MyChart({ data }) {
   const dias = ['Mon', 'Tues', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -19,7 +51,7 @@ function MyChart({ data }) {
   }));
 
   return (
-    <BarChart width={340} height={250} data={forecastData}>
+    <BarChart width={340} height={200} data={forecastData}>
       <XAxis dataKey="date" />
       <YAxis label="" />
       <Tooltip />
@@ -34,7 +66,7 @@ export default function Example() {
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(false);
   const [location, setLocationInput] = useState('Floridablanca');
-
+  const [astro, setSunrise] = useState(null);
   const forecastDays = 1;  // Días de pronóstico
 
   // Función para obtener los datos del clima y pronóstico
@@ -42,6 +74,7 @@ export default function Example() {
     try {
       const weatherData = await getCurrentWeather(location);
       const forecastData = await getWeatherForecast(location, forecastDays);
+      setSunrise(forecastData.forecast.astro)
       setWeather(weatherData);
       setForecast(forecastData.forecast);
     } catch (error) {
@@ -168,8 +201,31 @@ export default function Example() {
               <img src={calendar} alt="" />
             </div>
             <h3>Chance of rain</h3>
+        </div>
+      <div className={styles.barra}>
+          {forecast && <RainChart apiData={forecast} />}
+        </div>
+      </div> 
+      <footer className={styles.footer}>
+        <div className={styles.sunrise}>
+          <div className={styles.boxImg}>
+            <img src={sunrise} alt="" />
           </div>
-      </div>
+          <div className={styles.box}>
+            <p>Sunrise</p>
+            <p>{astro?.sunrise || '05:39 AM'}</p>
+          </div>
+        </div>
+        <div className={styles.sunrise}>
+          <div className={styles.boxImg}>
+            <img src={sunset} alt="" />
+          </div>
+          <div className={styles.box}>
+            <p>Sunrise</p>
+            <p>{astro?.sunset || '05:35 PM'}</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

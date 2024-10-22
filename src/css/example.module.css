@@ -62,7 +62,7 @@ h2 {
     /* background-color: teal; */
     width: 100%;
     color: black;
-    height: 23vh;
+    height: 20vh;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -121,7 +121,6 @@ h2 {
     background-color: var(--button-1);
 }
 .title {
-    padding-top: 2vh;
     display: flex;
 }
 .container{
@@ -141,4 +140,22 @@ h2 {
 .hour {
     /* background: blue; */
     margin: 3vw;
+}
+.barra {
+    /* background: red; */
+    width: 100%;
+    height: 22vh;
+    overflow: scroll;
+}
+.footer{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+.sunrise{
+    display: flex;
+    font-size: 3vw;
+}
+.footer p{
+    color: black;
 }
