@@ -116,6 +116,10 @@ h2 {
     width: 20vw;
     border: none;
     border-radius: 3vw;
+    cursor: pointer;
+}
+.menu button:hover{
+    background-color:var(--button-1) ;
 }
 .seleccionado{
     background-color: var(--button-1);
@@ -157,5 +161,31 @@ h2 {
     font-size: 3vw;
 }
 .footer p{
+    color: black;
+}
+.caja{
+    height: 20vh;
+    background: var(--color-1);
+    /* background-color: rebeccapurple; */
+}
+.caja .location{
+    /* background-color: red; */
+    height: 5vh;
+    margin-top: 10vh;
+}
+.caja .temperature{
+    /* background-color: tan; */
+    height: 10vh;
+}
+.caja .fecha{
+    /* background-color: darkcyan; */
+    height: 1vh;
+    display: none;
+}
+.caja .location input{
+    color: black;
+}
+.caja p,
+.caja h1 {
     color: black;
 }

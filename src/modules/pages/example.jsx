@@ -67,6 +67,7 @@ export default function Example() {
   const [error, setError] = useState(false);
   const [location, setLocationInput] = useState('Floridablanca');
   const [astro, setSunrise] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const forecastDays = 1;  // Días de pronóstico
 
   // Función para obtener los datos del clima y pronóstico
@@ -97,7 +98,22 @@ export default function Example() {
   useEffect(() => {
     fetchWeatherData();
   }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.1) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
 
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   if (error) {
     return <div className={styles.error}>Error loading weather data.</div>;
   }
@@ -108,19 +124,20 @@ export default function Example() {
 
   return (
     <div className={styles.weatherWidget}>
-        <div className={styles.boximg}>
-            <img src={bacground} alt="" />
-        </div>
-      <div className={styles.location}>
-        <input
-        type="text"
-        placeholder={`${weather.location.name}, ${weather.location.country}`}
-        value={location}
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
-      />
-        <div className={styles.icon}>
-        <i className='bx bx-search-alt-2' style={{color: '#fdf7f7'}}  ></i>
+      <div id='img' className={styles.boximg} style={{ display: isScrolled ? 'none' : 'block' }}>
+        <img src={bacground} alt="" />
+      </div>
+      <section id='caja' className={`${isScrolled ? styles.caja : ''}`}>
+        <div className={styles.location}>
+          <input
+            type="text"
+            placeholder={`${weather.location.name}, ${weather.location.country}`}
+            value={location}
+            onChange={handleInputChange}
+            onKeyPress={handleKeyPress}
+          />
+          <div className={styles.icon}>
+            <i id='lupa' className='bx bx-search-alt-2' style={{ color: isScrolled ? 'black' : '#fdf7f7' }}></i>
         </div>
       </div>
       <div className={styles.temperature}>
@@ -134,6 +151,7 @@ export default function Example() {
         <p>{weather.location.localtime}</p>
         <p>Day 3 <br /> Night -1</p>
       </div>
+        </section>
       <section className={styles.menu}>
         <button className={styles.seleccionado}>Today</button>
         <button>Tomorrow</button>
